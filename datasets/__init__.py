@@ -4,6 +4,9 @@ import datasets.stanford_online_products
 
 
 def select(dataset, opt, data_path):
+    if 'cub200lt' in dataset:
+        return cub200lt.Give(opt, data_path)
+
     if 'cub200' in dataset:
         return cub200.Give(opt, data_path)
 

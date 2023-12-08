@@ -10,7 +10,6 @@ def Give(opt, datapath):
     cls_num = len(image_list)
     img_max = len(image_list[0])
     img_num_per_cls = get_img_num_per_cls(img_max, cls_num, opt.imb_factor)
-    print(f"spliting data into {img_num_per_cls} number of datasets")
     image_list = [images[:img_num] for images, img_num in zip(image_list, img_num_per_cls)]
     image_list        = [x for y in image_list for x in y]
 

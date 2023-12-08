@@ -61,7 +61,8 @@ def basic_training_parameters(parser):
 def wandb_parameters(parser):
     ### Online Logging/Wandb Log Arguments
     parser.add_argument('--log_online',      action='store_true',            help='Flag. If set, run metrics are stored online in addition to offline logging. Should generally be set.')
-    parser.add_argument('--wandb_key',       default='<your_api_key_here>',  type=str,   help='API key for W&B.')
+    parser.add_argument('--wandb_key',       default='f84ca11a59c0a6e751f4ba9f44e6f24afab09453',  type=str,   help='API key for W&B.')
+    parser.add_argument('--online_backend',       default='wandb',  type=str,   help='online backend')
     parser.add_argument('--project',         default='Sample_Project',       type=str,   help='Name of the project - relates to W&B project names. In --savename default setting part of the savename.')
     parser.add_argument('--group',           default='Sample_Group',         type=str,   help='Name of the group - relates to W&B group names - all runs with same setup but different seeds are logged into one group. \
                                                                                                In --savename default setting part of the savename.')
@@ -134,6 +135,10 @@ def loss_specific_parameters(parser):
     parser.add_argument('--loss_arcface_lr',             default=0.0005,  type=float, help='Learning rate on class proxies.')
     parser.add_argument('--loss_arcface_angular_margin', default=0.5,     type=float, help='Angular margin in radians.')
     parser.add_argument('--loss_arcface_feature_scale',  default=16,      type=float, help='Inverse Temperature for NCA objective.')
+
+    ### long tail
+    parser.add_argument('--imb_factor', default=1.0,     type=float, help='Imbalance factor of long-tailed dataset')
+
     return parser
 
 
