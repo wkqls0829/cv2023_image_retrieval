@@ -8,10 +8,13 @@ def Give(opt, datapath):
     image_list        = {int(key.split('.')[0])-1:sorted([image_sourcepath+'/'+key+'/'+x for x in os.listdir(image_sourcepath+'/'+key) if '._' not in x]) for key in image_classes}
     image_list        = [[(key,img_path) for img_path in image_list[key]] for key in image_list.keys()]
     cls_num = len(image_list)
-    img_max = len(image_list[0])
+    img_max = len(image_list[0]) - 10
     img_num_per_cls = get_img_num_per_cls(img_max, cls_num, opt.imb_factor)
-    print(f"spliting data into {img_num_per_cls} number of datasets")
+    test_image_list = [images[-10:] for images in image_list]
+    print(f"spliting test data into {[len(im) for im in test_image_list]} number of datasets")
     image_list = [images[:img_num] for images, img_num in zip(image_list, img_num_per_cls)]
+    print(f"spliting train data into {[len(im) for im in image_list]} number of datasets")
+    test_image_list        = [x for y in test_image_list for x in y]
     image_list        = [x for y in image_list for x in y]
 
     ### Dictionary of structure class:list_of_samples_with_said_class
@@ -21,9 +24,18 @@ def Give(opt, datapath):
             image_dict[key] = []
         image_dict[key].append(img_path)
 
+    test_image_dict    = {}
+    for key, img_path in test_image_list:
+        if not key in test_image_dict.keys():
+            test_image_dict[key] = []
+        test_image_dict[key].append(img_path)
+
     ### Use the first half of the sorted data as training and the second half as test set
     keys = sorted(list(image_dict.keys()))
-    train,test      = keys[:len(keys)//2], keys[len(keys)//2:]
+    test_keys = sorted(list(test_image_dict.keys()))
+    train = keys
+    test = test_keys
+    ## train,test      = keys[:len(keys)//2], keys[len(keys)//2:]
 
     ### If required, split the training data into a train/val setup either by or per class.
     if opt.use_tv_split:
@@ -56,7 +68,7 @@ def Give(opt, datapath):
     test_conversion  = {i:total_conversion[key] for i,key in enumerate(test)}
 
     ###
-    test_image_dict = {key:image_dict[key] for key in test}
+    test_image_dict = {key:test_image_dict[key] for key in test}
 
     ###
     print('\nDataset Setup:\nUsing Train-Val Split: {0}\n#Classes: Train ({1}) | Val ({2}) | Test ({3})\n'.format(opt.use_tv_split, len(train_image_dict), len(val_image_dict) if val_image_dict else 'X', len(test_image_dict)))
