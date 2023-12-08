@@ -125,3 +125,12 @@ def Give(opt, datapath):
     eval_dataset.conversion        = train_conversion
 
     return {'training':train_dataset, 'validation':val_dataset, 'testing':test_dataset, 'evaluation':eval_dataset, 'evaluation_train':eval_train_dataset, 'super_evaluation':super_train_dataset}
+
+def get_img_num_per_cls(img_max, cls_num, imb_factor):
+    img_num_per_cls = []
+    for cls_idx in range(cls_num):
+        num = img_max * (imb_factor**(cls_idx / (cls_num - 1.0)))
+        img_num_per_cls.append(int(num))
+
+    return img_num_per_cls
+
