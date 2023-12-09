@@ -200,6 +200,11 @@ print('\n-----\n')
 iter_count = 0
 loss_args  = {'batch':None, 'labels':None, 'batch_features':None, 'f_embed':None}
 
+# Directory to save checkpoints
+save_interval = 50
+checkpoint_dir = 'checkpoints'
+os.makedirs(checkpoint_dir, exist_ok=True)
+
 
 for epoch in range(opt.n_epochs):
     epoch_start_time = time.time()
@@ -276,6 +281,13 @@ for epoch in range(opt.n_epochs):
     for metricname, metricval in result_metrics.items():
         LOG.progress_saver['Train'].log(metricname, metricval)
     LOG.progress_saver['Train'].log('time', np.round(time.time()-start, 4))
+    
+    
+    
+    if epoch % save_interval == 0:
+        checkpoint_path = os.path.join(checkpoint_dir, f'model_epoch_{epoch}_if_{opt.imb_factor}.pth')
+        torch.save(model.state_dict(), checkpoint_path)
+        
 
 
 

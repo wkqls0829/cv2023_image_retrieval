@@ -61,8 +61,11 @@ class BaseDataset(Dataset):
                 counter += 1
 
         self.image_dict = temp_image_dict
-        self.image_list = [[(x[0],key) for x in self.image_dict[key]] for key in self.image_dict.keys()]
+        self.image_list = [[(x[0],key) for x in self.image_dict[key]] for key in self.image_dict.keys()]  
+        # self.image_list = [[(1.jpg, 0),(2.jpg, 0)], [(1.jpg, 1),(2.jpg, 1)], [] ...]
+        
         self.image_list = [x for y in self.image_list for x in y]
+         # self.image_list = [(1.jpg, 0),(2.jpg, 0), (1.jpg, 1),(2.jpg, 1),  ...]
 
         self.image_paths = self.image_list
 
@@ -77,12 +80,12 @@ class BaseDataset(Dataset):
 
     def __getitem__(self, idx):
         input_image = self.ensure_3dim(Image.open(self.image_list[idx][0]))
-
+        
         ### Basic preprocessing.
         im_a = self.normal_transform(input_image)
         if 'bninception' in self.pars.arch:
             im_a = im_a[range(3)[::-1],:]
-        return self.image_list[idx][-1], im_a, idx
+        return self.image_list[idx][-1], im_a, idx    # img_class, image, idx
 
 
     def __len__(self):
