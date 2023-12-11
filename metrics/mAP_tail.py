@@ -2,16 +2,20 @@ import torch
 import numpy as np
 import faiss
 
+head_classes = range(66)
+body_classes = range(66, 134)
 tail_classes = range(134, 200)
 
 class Metric():
     def __init__(self, **kwargs):
         self.requires = ['features', 'target_labels']
-        self.name     = 'mAP_lim'
+        self.name     = 'mAP_tail'
 
     def __call__(self, target_labels, features):
-        features = [f for f, t in zip(features, target_labels) if t in tail_classes]
-        target_labels = [t for t in target_labels if t in tail_classes]
+        # print(target_labels)
+        # print([t in head_classes for t in target_labels])
+        features = features[[t in tail_classes for t in target_labels]]
+        target_labels = target_labels[[t in tail_classes for t in target_labels]]
         labels, freqs = np.unique(target_labels, return_counts=True)
         ## Account for faiss-limit at k=1023
         R             = min(1023,len(features))

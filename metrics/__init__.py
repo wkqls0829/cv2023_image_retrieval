@@ -1,4 +1,4 @@
-from metrics import e_recall, nmi, f1, mAP, mAP_c, mAP_1000, mAP_lim
+from metrics import e_recall, nmi, f1, mAP, mAP_c, mAP_1000, mAP_lim, mAP_head, mAP_body, mAP_tail
 from metrics import dists, rho_spectrum
 from metrics import c_recall, c_nmi, c_f1, c_mAP_c, c_mAP_1000, c_mAP_lim
 import numpy as np
