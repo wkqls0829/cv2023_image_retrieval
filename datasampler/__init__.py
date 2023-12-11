@@ -4,6 +4,7 @@ import datasampler.greedy_coreset_sampler
 import datasampler.fid_batchmatch_sampler
 import datasampler.disthist_batchmatch_sampler
 import datasampler.d2_coreset_sampler
+import datasampler.lt_sampler
 
 
 def select(sampler, opt, image_dict, image_list=None, **kwargs):
@@ -22,6 +23,8 @@ def select(sampler, opt, image_dict, image_list=None, **kwargs):
             sampler_lib = greedy_coreset_sampler
         elif 'd2' in sampler:
             sampler_lib = d2_coreset_sampler
+    elif 'lt' in sampler:
+        sampler_lib = lt_sampler
     else:
         raise Exception('Minibatch sampler <{}> not available!'.format(sampler))
 
