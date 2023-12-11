@@ -17,6 +17,7 @@ def Give(opt, datapath):
     cls_num = len(image_list)
     img_max = len(image_list[0]) - 10
     img_num_per_cls = get_img_num_per_cls(img_max, cls_num, opt.imb_factor) # img number를 점점 줄어들게 list
+    opt.img_num_per_cls = img_num_per_cls
     test_image_list = [images[-10:] for images in image_list] # 각 class에 대해서 마지막 10장을 test로 사용
     print(f"spliting test data into {[len(im) for im in test_image_list]} number of datasets")
     image_list = [images[:img_num] for images, img_num in zip(image_list, img_num_per_cls)] # image_list = [[], [],...] lt로 필요한 길이만큼 잘라줌 ### 요걸 plot 해줘야 겠구만 ###

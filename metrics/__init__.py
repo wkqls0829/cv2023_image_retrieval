@@ -22,6 +22,12 @@ def select(metricname, opt):
         return mAP_c.Metric()
     elif metricname=='mAP_lim':
         return mAP_lim.Metric()
+    elif metricname=='mAP_head':
+        return mAP_head.Metric()
+    elif metricname=='mAP_body':
+        return mAP_body.Metric()
+    elif metricname=='mAP_tail':
+        return mAP_tail.Metric()
     elif metricname=='mAP_1000':
         return mAP_1000.Metric()
     elif metricname=='f1':
