@@ -125,7 +125,7 @@ dataloaders['testing']    = torch.utils.data.DataLoader(datasets['testing'],    
 if opt.use_tv_split:
     dataloaders['validation'] = torch.utils.data.DataLoader(datasets['validation'], num_workers=opt.kernels, batch_size=opt.bs,shuffle=False)
 
-train_data_sampler      = dsamplers.select(opt.data_sampler, opt, datasets['training'].image_dict, datasets['training'].image_list)
+train_data_sampler      = dsamplers.select(opt.data_sampler, opt, datasets['training'].image_dict, datasets['training'].image_list, datasets['sampling_ratio'],)
 if train_data_sampler.requires_storage:
     train_data_sampler.create_storage(dataloaders['evaluation'], model, opt.device)
 
@@ -201,7 +201,7 @@ iter_count = 0
 loss_args  = {'batch':None, 'labels':None, 'batch_features':None, 'f_embed':None}
 
 # Directory to save checkpoints
-save_interval = 50
+save_interval = 150
 checkpoint_dir = 'checkpoints'
 os.makedirs(checkpoint_dir, exist_ok=True)
 
@@ -285,7 +285,7 @@ for epoch in range(opt.n_epochs):
     
     
     if epoch % save_interval == 0:
-        checkpoint_path = os.path.join(checkpoint_dir, f'model_epoch_{epoch}_if_{opt.imb_factor}.pth')
+        checkpoint_path = os.path.join(checkpoint_dir, f'model_epoch_{epoch}_if_{opt.imb_factor}_sp_{opt.data_sampler}_bm_{opt.batch_mining}.pth')
         torch.save(model.state_dict(), checkpoint_path)
         
 

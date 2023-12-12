@@ -138,6 +138,7 @@ def loss_specific_parameters(parser):
 
     ### long tail
     parser.add_argument('--imb_factor', default=1.0,     type=float, help='Imbalance factor of long-tailed dataset')
+    parser.add_argument('--sampling_ratio', default=1.0,     type=float, help='Imbalance factor of long-tailed dataset')
 
     return parser
 
