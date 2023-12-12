@@ -2,7 +2,7 @@
 
 gpu=3
 imb_factor=1.0
-savename=cub200lt_if1.0
+savename=btriplet_if1.0
 nohup python -u main.py --loss margin --batch_mining distance --log_online \
     --project DML_project --group cub200lt --seed 0 \
     --gpu $gpu --bs 112 --data_sampler full_random --samples_per_class 2 \
@@ -13,7 +13,7 @@ nohup python -u main.py --loss margin --batch_mining distance --log_online \
 
 gpu=4
 imb_factor=0.5
-savename=cub200lt_if0.5
+savename=btriplet_if0.5
 nohup python -u main.py --loss margin --batch_mining distance --log_online \
     --project DML_project --group cub200lt --seed 0 \
     --gpu $gpu --bs 112 --data_sampler full_random --samples_per_class 2 \
@@ -24,7 +24,7 @@ nohup python -u main.py --loss margin --batch_mining distance --log_online \
 
 gpu=5
 imb_factor=0.1
-savename=cub200lt_if0.1
+savename=btriplet_if0.1
 nohup python -u main.py --loss margin --batch_mining distance --log_online \
     --project DML_project --group cub200lt --seed 0 \
     --gpu $gpu --bs 112 --data_sampler full_random --samples_per_class 2 \
