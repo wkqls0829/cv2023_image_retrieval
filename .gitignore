@@ -1,5 +1,6 @@
 __pycache__
 *.pyc
+*.out
 Training_Results
 wandb
 diva_main.py
