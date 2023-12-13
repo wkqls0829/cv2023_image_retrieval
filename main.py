@@ -205,6 +205,20 @@ save_interval = 50
 checkpoint_dir = 'checkpoints'
 os.makedirs(checkpoint_dir, exist_ok=True)
 
+opt.num_class = 200
+
+# proto_embeds = (torch.randn(opt.num_class, opt.embed_dim, device=opt.device, requires_grad=False)-0.5) / 100
+proto_embeds = torch.zeros((opt.num_class, opt.embed_dim), device=opt.device, requires_grad=False)
+proto_labels = torch.arange(0, opt.num_class, requires_grad=False)
+
+if opt.proto == "tail":
+    proto_cut = opt.num_class // 3 * 2 + 1
+elif opt.proto == "body":
+    proto_cut = opt.num_class // 3
+elif opt.proto == "head":
+    proto_cut = 0
+else:
+    proto_cut = opt.num_class
 
 for epoch in range(opt.n_epochs):
     epoch_start_time = time.time()
@@ -231,6 +245,10 @@ for epoch in range(opt.n_epochs):
     data_iterator = tqdm(dataloaders['training'], desc='Epoch {} Training...'.format(epoch))
 
 
+    embed_sum = torch.zeros(opt.num_class, opt.embed_dim, device=opt.device, requires_grad=False)
+    embed_count = [0 for i in range(opt.num_class)]
+
+
     for i,out in enumerate(data_iterator):
         class_labels, input, input_indices = out
 
@@ -240,7 +258,22 @@ for epoch in range(opt.n_epochs):
         # Needed for MixManifold settings.
         if 'mix' in opt.arch: model_args['labels'] = class_labels
         embeds  = model(**model_args)
+
         if isinstance(embeds, tuple): embeds, (avg_features, features) = embeds
+
+        for i in range(opt.bs):
+            embed_sum[class_labels[i]] += embeds[i]
+            embed_count[class_labels[i]] += 1
+
+        # if proto_embeds.count_nonzero() == 0:
+            # print("initializing prototype")
+            # proto_embeds[:100] = embeds[:100].clone().detach()
+            # proto_embeds[100:200] = embeds[:100].clone().detach()
+
+
+        if proto_cut != opt.num_class:
+            embeds = torch.cat((embeds, proto_embeds[proto_cut:].clone().detach()), dim=0)
+            class_labels = torch.cat((class_labels, proto_labels[proto_cut:]), dim=0)
 
         ### Compute Loss
         loss_args['batch']          = embeds
@@ -273,6 +306,13 @@ for epoch in range(opt.n_epochs):
         """======================================="""
         if train_data_sampler.requires_storage and train_data_sampler.update_storage:
             train_data_sampler.replace_storage_entries(embeds.detach().cpu(), input_indices)
+
+    for i in range(opt.num_class):
+        if embed_count[i] != 0:
+            proto_embeds[i] = embed_sum[i] / embed_count[i] 
+    print("updating prototype")
+
+
 
     result_metrics = {'loss': np.mean(loss_collect)}
 

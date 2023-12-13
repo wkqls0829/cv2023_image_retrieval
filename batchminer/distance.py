@@ -28,6 +28,8 @@ class BatchMiner():
             neg = tar_labels!=labels[i]; pos = tar_labels==labels[i]
 
             anchors.append(i)
+
+
             q_d_inv = self.inverse_sphere_distances(dim, bs, distances[i], tar_labels, labels[i])
             negatives.append(np.random.choice(sel_d,p=q_d_inv))
 
