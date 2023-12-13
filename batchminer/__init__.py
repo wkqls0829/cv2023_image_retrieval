@@ -1,5 +1,5 @@
 from batchminer import random_distance, intra_random
-from batchminer import lifted, rho_distance, softhard, npair, parametric, random, semihard, distance
+from batchminer import lifted, rho_distance, softhard, npair, parametric, random, semihard, distance, softhard_balanced
 
 BATCHMINING_METHODS = {'random':random,
                        'semihard':semihard,
@@ -10,7 +10,8 @@ BATCHMINING_METHODS = {'random':random,
                        'parametric':parametric,
                        'lifted':lifted,
                        'random_distance': random_distance,
-                       'intra_random': intra_random}
+                       'intra_random': intra_random,
+                       'softhard_balanced': softhard_balanced,}
 
 
 def select(batchminername, opt):

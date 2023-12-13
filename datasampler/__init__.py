@@ -5,9 +5,9 @@ import datasampler.fid_batchmatch_sampler
 import datasampler.disthist_batchmatch_sampler
 import datasampler.d2_coreset_sampler
 import datasampler.lt_sampler
+import datasampler.over_sampler
 
-
-def select(sampler, opt, image_dict, image_list=None, **kwargs):
+def select(sampler, opt, image_dict, image_list=None, sampling_ratio = None, **kwargs):
     if 'batchmatch' in sampler:
         if sampler=='disthist_batchmatch':
             sampler_lib = disthist_batchmatch_sampler
@@ -24,7 +24,10 @@ def select(sampler, opt, image_dict, image_list=None, **kwargs):
         elif 'd2' in sampler:
             sampler_lib = d2_coreset_sampler
     elif 'lt' in sampler:
-        sampler_lib = lt_sampler
+        return lt_sampler.Sampler(opt, sampling_ratio = sampling_ratio, image_dict=image_dict,image_list=image_list)
+        
+    elif 'over' in sampler:
+        sampler_lib = over_sampler    
     else:
         raise Exception('Minibatch sampler <{}> not available!'.format(sampler))
 
