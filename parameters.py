@@ -44,6 +44,7 @@ def basic_training_parameters(parser):
     parser.add_argument('--storage_metrics',    nargs='+', default=['e_recall@1'],     type=str, help='Improvement in these metrics on a dataset trigger checkpointing.')
     parser.add_argument('--evaltypes',          nargs='+', default=['discriminative'], type=str, help='The network may produce multiple embeddings (ModuleDict, relevant for e.g. DiVA). If the key is listed here, the entry will be evaluated on the evaluation metrics.\
                                                                                                        Note: One may use Combined_embed1_embed2_..._embedn-w1-w1-...-wn to compute evaluation metrics on weighted (normalized) combinations.')
+    parser.add_argument('--proto',           default='none',        type=str,   help='prototype use')
 
 
     ##### Setup Parameters
