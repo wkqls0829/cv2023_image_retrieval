@@ -38,9 +38,8 @@ def basic_training_parameters(parser):
     ##### Evaluation Parameters
     parser.add_argument('--no_train_metrics', action='store_true',   help='Flag. If set, evaluation metrics are not computed for the training data. Saves a forward pass over the full training dataset.')
     parser.add_argument('--evaluate_on_gpu',  action='store_true',   help='Flag. If set, all metrics, when possible, are computed on the GPU (requires Faiss-GPU).')
-    parser.add_argument('--evaluation_metrics', nargs='+', default=['e_recall@1', 'e_recall@2', 'e_recall@4', 'nmi', 'f1', 'mAP_1000', 'mAP_lim', 'mAP_c', \
-                                                                    'dists@intra', 'dists@inter', 'dists@intra_over_inter', 'rho_spectrum@0', \
-                                                                    'rho_spectrum@-1', 'rho_spectrum@1', 'rho_spectrum@2', 'rho_spectrum@10'], type=str, help='Metrics to evaluate performance by.')
+    parser.add_argument('--evaluation_metrics', nargs='+', default=['e_recall@1', 'e_recall@2', 'nmi', 'f1', 'mAP_lim', 'mAP_head', 'mAP_body', 'mAP_tail', \
+                                                                    'dists@intra', 'dists@inter'], type=str, help='Metrics to evaluate performance by.')
 
     parser.add_argument('--storage_metrics',    nargs='+', default=['e_recall@1'],     type=str, help='Improvement in these metrics on a dataset trigger checkpointing.')
     parser.add_argument('--evaltypes',          nargs='+', default=['discriminative'], type=str, help='The network may produce multiple embeddings (ModuleDict, relevant for e.g. DiVA). If the key is listed here, the entry will be evaluated on the evaluation metrics.\
@@ -61,7 +60,7 @@ def basic_training_parameters(parser):
 def wandb_parameters(parser):
     ### Online Logging/Wandb Log Arguments
     parser.add_argument('--log_online',      action='store_true',            help='Flag. If set, run metrics are stored online in addition to offline logging. Should generally be set.')
-    parser.add_argument('--wandb_key',       default='51edb67fd1ff2a5166a71203ba5447cc5fb1560a',  type=str,   help='API key for W&B.')
+    parser.add_argument('--wandb_key',       default='83d03ba7a5e55ac2c36d7b6eb2e8394a0c3d302e',  type=str,   help='API key for W&B.')
     parser.add_argument('--online_backend',       default='wandb',  type=str,   help='online backend')
     parser.add_argument('--project',         default='Sample_Project',       type=str,   help='Name of the project - relates to W&B project names. In --savename default setting part of the savename.')
     parser.add_argument('--group',           default='Sample_Group',         type=str,   help='Name of the group - relates to W&B group names - all runs with same setup but different seeds are logged into one group. \

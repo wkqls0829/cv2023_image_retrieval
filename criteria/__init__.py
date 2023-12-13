@@ -1,5 +1,5 @@
 ### Standard DML criteria
-from criteria import triplet, margin, proxynca, npair
+from criteria import triplet, b_triplet, margin, proxynca, npair
 from criteria import lifted, contrastive, softmax
 from criteria import angular, snr, histogram, arcface
 from criteria import softtriplet, multisimilarity, quadruplet
@@ -13,6 +13,7 @@ import copy
 def select(loss, opt, to_optim, batchminer=None):
     #####
     losses = {'triplet': triplet,
+              'b_triplet': b_triplet,
               'margin':margin,
               'proxynca':proxynca,
               'npair':npair,

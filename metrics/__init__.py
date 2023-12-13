@@ -1,4 +1,4 @@
-from metrics import e_recall, nmi, f1, mAP, mAP_c, mAP_1000, mAP_lim
+from metrics import e_recall, nmi, f1, mAP, mAP_c, mAP_1000, mAP_lim, mAP_head, mAP_body, mAP_tail
 from metrics import dists, rho_spectrum
 from metrics import c_recall, c_nmi, c_f1, c_mAP_c, c_mAP_1000, c_mAP_lim
 import numpy as np
@@ -22,6 +22,12 @@ def select(metricname, opt):
         return mAP_c.Metric()
     elif metricname=='mAP_lim':
         return mAP_lim.Metric()
+    elif metricname=='mAP_head':
+        return mAP_head.Metric()
+    elif metricname=='mAP_body':
+        return mAP_body.Metric()
+    elif metricname=='mAP_tail':
+        return mAP_tail.Metric()
     elif metricname=='mAP_1000':
         return mAP_1000.Metric()
     elif metricname=='f1':
