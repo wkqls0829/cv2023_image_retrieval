@@ -285,11 +285,9 @@ for epoch in range(opt.n_epochs):
     
     
     if epoch % save_interval == 0:
-        checkpoint_path = os.path.join(checkpoint_dir, f'model_epoch_{epoch}_if_{opt.imb_factor}_sp_{opt.data_sampler}_bm_{opt.batch_mining}.pth')
+        checkpoint_path = os.path.join(checkpoint_dir, f'model_epoch_{epoch}_if_{opt.imb_factor}_sp_{opt.data_sampler}_bm_{opt.batch_mining}_{opt.sampling_ratio}.pth')
         torch.save(model.state_dict(), checkpoint_path)
         
-
-
 
     """======================================="""
     ### Evaluate Metric for Training & Test (& Validation)

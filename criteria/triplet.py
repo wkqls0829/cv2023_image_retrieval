@@ -14,6 +14,8 @@ class Criterion(torch.nn.Module):
         self.margin     = opt.loss_triplet_margin
         self.batchminer = batchminer
         self.name           = 'triplet'
+        self.tail_classes = range(0, 66)
+        
 
         ####
         self.ALLOWED_MINING_OPS  = ALLOWED_MINING_OPS
@@ -26,7 +28,15 @@ class Criterion(torch.nn.Module):
 
     def forward(self, batch, labels, **kwargs):
         if isinstance(labels, torch.Tensor): labels = labels.cpu().numpy()
+        loss_weight = torch.ones(112).cuda()
+       
+        for idx, single_label in enumerate(labels):
+            if single_label in self.tail_classes:
+                loss_weight[idx] = 1.0
+                
+        
         sampled_triplets = self.batchminer(batch, labels)
         loss             = torch.stack([self.triplet_distance(batch[triplet[0],:],batch[triplet[1],:],batch[triplet[2],:]) for triplet in sampled_triplets])
-
+        
+        loss = loss * loss_weight
         return torch.mean(loss)

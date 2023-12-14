@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 import numpy as np
 from PIL import Image
-
+import random
 
 """==================================================================================================="""
 ################## BASIC PYTORCH DATASET USED FOR ALL DATASETS ##################################
@@ -13,6 +13,7 @@ class BaseDataset(Dataset):
 
         #####
         self.image_dict = image_dict
+        self.tail_classes = range(0, 66)
 
         #####
         self.init_setup()
@@ -33,6 +34,8 @@ class BaseDataset(Dataset):
 
         #############
         self.normal_transform = []
+        self.tail_transform = []
+        
         if not self.is_validation:
             if opt.augmentation=='base' or opt.augmentation=='big':
                 self.normal_transform.extend([transforms.RandomResizedCrop(size=crop_im_size), transforms.RandomHorizontalFlip(0.5)])
@@ -43,10 +46,36 @@ class BaseDataset(Dataset):
                 self.normal_transform.extend([transforms.Resize(size=256), transforms.RandomCrop(crop_im_size), transforms.RandomHorizontalFlip(0.5)])
         else:
             self.normal_transform.extend([transforms.Resize(256), transforms.CenterCrop(crop_im_size)])
+            
         self.normal_transform.extend([transforms.ToTensor(), normalize])
         self.normal_transform = transforms.Compose(self.normal_transform)
+        
+        self.tail_transform_single = []
+        self.tail_transform_single.extend([transforms.RandomResizedCrop(size=crop_im_size), transforms.RandomHorizontalFlip(0.5)])
+        self.tail_transform_single.extend([transforms.ToTensor(), normalize])
+        self.tail_transform.append(transforms.Compose(self.tail_transform_single))
+        
+        # self.tail_transform_single = []
+        # self.tail_transform_single.extend([transforms.RandomResizedCrop(size=crop_im_size), transforms.RandomGrayscale(p=0.2),
+        #                                       transforms.ColorJitter(0.2, 0.2, 0.2, 0.2), transforms.RandomHorizontalFlip(0.5)])
+        # self.tail_transform_single.extend([transforms.ToTensor(), normalize])
+        # self.tail_transform.append(transforms.Compose(self.tail_transform_single))
+        
+        
+        self.tail_transform_single = []
+        self.tail_transform_single.extend([transforms.Resize(size=235), transforms.RandomCrop(crop_im_size), transforms.RandomHorizontalFlip(0.5)])
+        self.tail_transform_single.extend([transforms.ToTensor(), normalize])
+        self.tail_transform.append(transforms.Compose(self.tail_transform_single))
+        
+        
+        # self.tail_transform_single = []
+        # self.tail_transform_single.extend([transforms.RandomResizedCrop(size=crop_im_size), transforms.ColorJitter(0.2, 0.2, 0.2, 0.2), transforms.RandomHorizontalFlip(0.5)])
+        # self.tail_transform_single.extend([transforms.ToTensor(), normalize])
+        # self.tail_transform.append(transforms.Compose(self.tail_transform_single))
+        
+        
 
-
+    
     def init_setup(self):
         self.n_files       = np.sum([len(self.image_dict[key]) for key in self.image_dict.keys()])
         self.avail_classes = sorted(list(self.image_dict.keys()))
@@ -81,7 +110,12 @@ class BaseDataset(Dataset):
     def __getitem__(self, idx):
         input_image = self.ensure_3dim(Image.open(self.image_list[idx][0]))
         
-        ### Basic preprocessing.
+        # if self.image_list[idx][1] in self.tail_classes:
+        #     tail_transform_select = random.choice(self.tail_transform)
+        #     im_a = tail_transform_select(input_image)
+        # else:
+        #     ## Basic preprocessing.
+        #     im_a = self.normal_transform(input_image)
         im_a = self.normal_transform(input_image)
         if 'bninception' in self.pars.arch:
             im_a = im_a[range(3)[::-1],:]

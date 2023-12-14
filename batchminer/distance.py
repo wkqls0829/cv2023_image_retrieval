@@ -14,8 +14,6 @@ class BatchMiner():
         if isinstance(labels, torch.Tensor): labels = labels.detach().cpu().numpy()
         bs, dim = batch.shape
 
-        print(labels)
-
         if distances is None:
             distances = self.pdist(batch.detach()).clamp(min=self.lower_cutoff)
         sel_d = distances.shape[-1]
@@ -40,7 +38,7 @@ class BatchMiner():
                 #Sample negatives by distance
 
         sampled_triplets = [[a,p,n] for a,p,n in zip(anchors, positives, negatives)]
-        print(sampled_triplets)
+       
         if return_distances:
             return sampled_triplets, distances
         else:
